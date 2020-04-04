@@ -4,7 +4,7 @@
 #  Variables
 #
 CXX = clang++
-CXXFLAGS = -w -Ofast#-Wall -g -lm -lstdc++
+CXXFLAGS = -w -Ofast #-pg#-ggdb#-Wall -g -lm -lstdc++
 SRf = $(wildcard $(SOURCEDIRC)*.cpp) dynamics_main.cpp
 SOURCEDIRC = Cmat/
 # Gather all the source files (.cpp) files requried to for compilation

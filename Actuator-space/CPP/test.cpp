@@ -1,6 +1,7 @@
 #include<iostream>
 #include<Eigen/Dense>
-#include"dyn_funcs_test.h"
+//#include"dyn_funcs_test.h"
+#include"dynamics_main.cpp"
 
 using namespace Eigen;
 int main(int argc, char const *argv[]) {
@@ -19,6 +20,12 @@ dq << 0.06624059529735823, 0.08303839919975621, 0.07035174383427208, \
 0.108351678995563, 0.08633350197949015, 0.05029075837340629, \
 0.050290758373406276, 0.08633350197949018, 0.14243291434227942, 0.1, \
 0, 0, 0, 0, 0;
+
+VectorXd qss(12), dd(6);
+qss << 1.2083279353106968, 1.2083279353106968, 1.2083279353106968, \
+1.2083279353106968, 1.2083279353106968, 1.2083279353106968, 0.1, 0, 0, 0, 0, 0;
+dd = doubledots(qss);
+std::cout<<dd<<std::endl;
 
 VectorXd etatest(12);
 etatest = etavec(q);

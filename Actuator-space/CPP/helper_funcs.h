@@ -14,7 +14,7 @@ VectorXd TrackRoot(VectorXd thetai, VectorXd phii){
 	loopcounter = 0;
 	tempphi = phii;
 	while ((nvec.cwiseAbs()).maxCoeff()>=pow(10, -15)) {
-		if (loopcounter>=100)
+		if (loopcounter>=25)
 			break;
 		loopcounter++;
 		// qval << tempphi, thetai;
