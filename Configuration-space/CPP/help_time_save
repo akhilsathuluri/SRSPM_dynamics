@@ -1,0 +1,3 @@
+/usr/bin/time -f "%e" -o exectime.txt ./a 
+
+Run the above to save the execution time of this one single command

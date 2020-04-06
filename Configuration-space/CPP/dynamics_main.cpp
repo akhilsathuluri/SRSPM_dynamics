@@ -64,13 +64,14 @@ int * jac;
 
 int main ()
 {
-
+/*
   std::ofstream ddfile;
   ddfile.open("dddata.dat");
   std::ofstream file;
   std::ofstream dfile;
   file.open("qxdata.dat");
   dfile.open("dqxdata.dat");
+*/
   VectorXd qss(36), dd(18);
     gsl_odeiv2_system sys = {func, NULL, 36, NULL};
 
@@ -96,14 +97,16 @@ int main ()
             printf ("error, return value=%d\n", status);
             break;
         }
-        //Printing the values
-       //printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[0],y[1],y[2],y[3],y[4],y[5], y[6], y[7], y[8], y[9], y[10], \
-       //y[11], y[12], y[13], y[14], y[15], y[16], y[17]);
-       //printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[18], y[19], y[20], y[21], y[22], y[23], y[24], y[25], y[26], y[27], \
-       //y[28], y[29], y[30], y[31], y[32], y[33], y[34], y[35]);
+/*      
+  //Printing the values
+       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[0],y[1],y[2],y[3],y[4],y[5], y[6], y[7], y[8], y[9], y[10], \
+       y[11], y[12], y[13], y[14], y[15], y[16], y[17]);
+       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[18], y[19], y[20], y[21], y[22], y[23], y[24], y[25], y[26], y[27], \
+       y[28], y[29], y[30], y[31], y[32], y[33], y[34], y[35]);
        //writing a code to dump this data into a csv file
+*/
 
-
+/*
        file <<t<<" "<<y[0]<<" "<<y[1]<<" "<<y[2]<<" "<<y[3]<<" "<<y[4]<<" "<<y[5]<<" "<<y[6]<<" "<<y[7]<<" "<<y[8]<<" "<<y[9]<<" "<<y[10]<<" "\
        <<y[11]<<" "<<y[12]<<" "<<y[13]<<" "<<y[14]<<" "<<y[15]<<" "<<y[16]<<" "<<y[17]<<" "<<std::endl;
        dfile <<t<<" "<<y[18]<<" "<< y[19]<<" "<< y[20]<<" "<< y[21]<<" "<< y[22]<<" "<< y[23]<<" "<< y[24]<<" "<<y[25]<<" "<< y[26]<<" "<< y[27]\
@@ -115,7 +118,7 @@ int main ()
        ddfile <<t<<" "<<dd(0)<<" "<<dd(1)<<" "<<dd(2)<<" "<<dd(3)<<" "<<dd(4)<<" "<<dd(5)<<" "<<dd(6)<<" "<<dd(7)<<" "<<dd(8)<<" "<<dd(9)<<" "\
        <<dd(10)<<" "<<dd(11)<<" "<<dd(12)<<" "<<dd(13)<<" "<<dd(14)<<" "<<dd(15)<<" "<<dd(16)<<" "<<dd(17)<<std::endl;
 
-
+*/
 
     }
 

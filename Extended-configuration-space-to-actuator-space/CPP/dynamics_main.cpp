@@ -53,42 +53,45 @@ int * jac;
 
 int main ()
 {
-
+/*
   std::ofstream ddfile;
   ddfile.open("dddata.dat");
   std::ofstream file;
   std::ofstream dfile;
   file.open("qxdata.dat");
   dfile.open("dqxdata.dat");
-
+*/
   VectorXd qss(12), dd(6);
 // printf("Entered main");
     gsl_odeiv2_system sys = {func, NULL, 12, NULL};
     gsl_odeiv2_driver * d = gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45, 1e-7, 1e-6, 0.0);
     int i;
-    double t = 0.0, t1 = 1;
+    double t = 0.0, t1 = 0.48;
     double y[12] = {1.2083279353106968,1.2083279353106968,1.2083279353106968,1.2083279353106968,
    1.2083279353106968,1.2083279353106968, 0,0,0,0,0,0};
 
-    for (i = 1; i <= 500; i++)
+    for (i = 1; i <= 100; i++)
     {
-        double ti = i * t1 / 500.0;
+        double ti = i * t1 / 100.0;
         int status = gsl_odeiv2_driver_apply (d, &t, ti, y);
         if (status != GSL_SUCCESS)
         {
             printf ("error, return value=%d\n", status);
             break;
         }
-        //Printing the values
+/*  
+      //Printing the values
        printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[0],y[1],y[2],y[3],y[4],y[5]);
        printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[6], y[7], y[8], y[9], y[10], y[11]);
-
+*/
+/*
       file <<t<<" "<<y[0]<<" "<<y[1]<<" "<<y[2]<<" "<<y[3]<<" "<<y[4]<<" "<<y[5]<<std::endl;
        dfile <<t<<" "<<y[6]<<" "<<y[7]<<" "<<y[8]<<" "<<y[9]<<" "<<y[10]<<" "<<y[11]<<std::endl;
        qss << y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7], y[8], y[9], y[10], \
        y[11];
        dd = doubledots(qss);
        ddfile <<t<<" "<<dd(0)<<" "<<dd(1)<<" "<<dd(2)<<" "<<dd(3)<<" "<<dd(4)<<" "<<dd(5)<<std::endl;
+*/
     }
     gsl_odeiv2_driver_free (d);
     return 0;
@@ -97,14 +100,12 @@ int main ()
 //doubledots
 VectorXd doubledots(VectorXd qthss){
 	//Root Tracker
-//std::cout<<qthss<<"\n"<<std::endl;
 	VectorXd qe(24), dqvals(18), dqe(24), thvals(6), dthvals(6);
 	thvals = qthss.head(6);
 	dthvals = qthss.tail(6);
 	//Root tracking
 	tempphi = TrackRoot(thvals, tempphi);
 	qe << tempphi.tail(12), thvals, tempphi.head(6);
-//std::cout<<qe<<"\n"<<std::endl;
 	//Compute dqe
 	MatrixXd Jetqphival(passive,passive),Jetqthval(passive,active), Jqphiqxval(passive,active), Jqphiqthval(passive,active), Jqethval(coords,active), tempJ(coords,active);
 	  Jetqphival = Jetaqphimat(qe);
@@ -119,7 +120,6 @@ VectorXd doubledots(VectorXd qthss){
 	  Mval = Mmat(qe);
 	  Cval = Cmat(qe, dqe);
 	  Gval = Gvec(qe);
-	//printf("Mvals done");
 	  //Computing the Jacobians
 	  MatrixXd dJetqphival(passive,passive), dJetqthval(passive,active), dJqethval(coords,active);
 	  dJetqphival = dJetaqphimat(qe, dqe);
@@ -131,9 +131,7 @@ VectorXd doubledots(VectorXd qthss){
 	  Mthval = (Jqethval.transpose())*Mval*Jqethval;
 	  Cthval = (Jqethval.transpose())*(Mval*dJqethval+Cval*Jqethval		 );
 	  Gthval = (Jqethval.transpose())*Gval;
-	//printf("Mapping done");
 	  //Dynamics equations
 	  dd = -(Mthval.inverse())*(Cthval*dthvals+Gthval);
-	//printf("returning dd");
 	  return dd;
 }
