@@ -10,6 +10,39 @@ using namespace Eigen;
 #define passive 18
 #define active 6
 
+
+//Fixed Dimension Linear Solve
+VectorXd LinearSolve2(MatrixXd Amat, VectorXd bvec){
+  // Transposing so that a_dat gets the right sequence
+  Amat.transposeInPlace();
+  double *a_data = Amat.data(), *b_data=bvec.data();
+  gsl_matrix_view m
+    = gsl_matrix_view_array (a_data, active, active);
+
+  gsl_vector_view b
+    = gsl_vector_view_array (b_data, active);
+
+  gsl_vector *x = gsl_vector_alloc (active);
+
+  int s;
+
+  gsl_permutation * p = gsl_permutation_alloc (active);
+
+  gsl_linalg_LU_decomp (&m.matrix, p, &s);
+
+  gsl_linalg_LU_solve (&m.matrix, p, &b.vector, x);
+
+  VectorXd xval(active);
+  for (size_t i = 0; i < active; i++) {
+    xval(i) = gsl_vector_get(x, i);
+  }
+
+  gsl_permutation_free (p);
+  gsl_vector_free (x);
+  return xval;
+}
+
+
 //Fixed Dimension Linear Solve
 VectorXd LinearSolve(MatrixXd Amat, VectorXd bvec){
   // Transposing so that a_dat gets the right sequence

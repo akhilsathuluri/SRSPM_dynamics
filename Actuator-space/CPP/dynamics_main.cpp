@@ -61,9 +61,9 @@ int main ()
 
     gsl_odeiv2_driver * d = gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45, 1e-7, 1e-6, 0.0);
     int i;
-    double t = 0.0, t1 = 0.3;
+    double t = 0.0, t1 = 0.48;
     double y[12] = {1.2083279353106968,1.2083279353106968,1.2083279353106968,1.2083279353106968, 1.2083279353106968,1.2083279353106968, 0,0,0,0,0,0};
-//    double y[12] = {1.16276,1.16276,1.16276,1.16276,1.16276,1.16276,-0.90941, -0.909413,-0.909407, -0.909407, -0.909413, -0.90941};
+//    double y[12] = {1.16276,1.16276,1.16276,1.16276,1.16276,1.16276,0, 0,0,0,0,0};
 //    double y[12] = {1.2083,1.2083,1.2083,1.2083,1.2083,1.2083, 0, 0,0, 0, 0, 0};
 
 	for (i = 1; i <= 100; i++)
@@ -80,9 +80,9 @@ int main ()
 /*
       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[0],y[1],y[2],y[3],y[4],y[5]);
       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[6], y[7], y[8], y[9], y[10], y[11]);
-
 */
-/*    file <<t<<" "<<y[0]<<" "<<y[1]<<" "<<y[2]<<" "<<y[3]<<" "<<y[4]<<" "<<y[5]<<std::endl;
+/*
+    file <<t<<" "<<y[0]<<" "<<y[1]<<" "<<y[2]<<" "<<y[3]<<" "<<y[4]<<" "<<y[5]<<std::endl;
        dfile <<t<<" "<<y[6]<<" "<<y[7]<<" "<<y[8]<<" "<<y[9]<<" "<<y[10]<<" "<<y[11]<<std::endl;
        qss << y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7], y[8], y[9], y[10], \
        y[11];
@@ -98,32 +98,29 @@ int main ()
 //doubledots
 VectorXd doubledots(VectorXd qthss){
 	//Root Tracker
-	VectorXd phival(12), phii(12), qvals(18), dqvals(18), thetai(6), dthetai(6);
-	
+	VectorXd qvals(18), dqvals(18), thetai(6), dthetai(6);
 	thetai = qthss.head(6);
 	dthetai = qthss.tail(6);
 	tempphi = TrackRoot(thetai, tempphi);
 	qvals << tempphi, thetai;
-
-	MatrixXd Minv(18,18), Mval(18,18), Cval(18,18), Jetaqval(12,18), dJetaqval(12,18), lambda(18,12)\
-	, Jetathval(12,6), Jetaphval(12,12), dJetathval(12,6), dJetaphval(12,12), Mthval(6,6), Cthval(6,6)\
-	, Jqthval(18,6), dJphthval(12,6), dJqthval(18,6);
+	//Computing dq
+	MatrixXd Mval(18,18), Cval(18,18), Jetathval(12,6), Jetaphval(12,12), dJetathval(12,6), dJetaphval(12,12), Mthval(6,6), Cthval(6,6)\
+	, Jqthval(18,6), dJphthval(12,6), dJqthval(18,6), Jphthval(12,6);
 	VectorXd Gval(18), dd(6), Gthval(6);
 	//Jacobians for embedded formulation
 	Jetathval = Jetathmat(qvals);
 	Jetaphval = Jetaphmat(qvals);
+	Jphthval = -(Jetaphval.inverse())*Jetathval;
+	dqvals << Jphthval*dthetai, dthetai;
+	Jqthval <<  Jphthval, MatrixXd::Identity(6,6);
+	//Now getting the velocity of the passive variables
 	dJetathval = dJetathmat(qvals, dqvals);
 	dJetaphval = dJetaphmat(qvals, dqvals);
-	Jqthval << (-Jetaphval.inverse())*Jetathval, MatrixXd::Identity(6,6);
-	dJphthval << (Jetaphval.inverse())*(-dJetathval+dJetaphval*(Jetaphval.inverse())*Jetathval);
-	dJqthval << dJphthval, MatrixXd::Zero(6,6);
-	//Now getting the velocity of the passive variables
-	dqvals = Jqthval*dthetai;
+	dJqthval << (Jetaphval.inverse())*(-dJetathval+dJetaphval*(Jetaphval.inverse())*Jetathval), MatrixXd::Zero(6,6);
 	//Constructing the matrices
 	Mval = Mmat(qvals);
 	Cval = Cmat(qvals, dqvals);
 	Gval = Gvec(qvals);
-	Minv = Mval.inverse();
 	//Mapping the matrices
 	Mthval = (Jqthval.transpose())*Mval*Jqthval;
 	Cthval = (Jqthval.transpose())*(Mval*dJqthval+Cval*Jqthval);

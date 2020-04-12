@@ -133,5 +133,7 @@ VectorXd doubledots(VectorXd qthss){
 	  Gthval = (Jqethval.transpose())*Gval;
 	  //Dynamics equations
 	  dd = -(Mthval.inverse())*(Cthval*dthvals+Gthval);
+	  
+	  //dd = -LinearSolve2(Mthval, (Cthval*dthvals+Gthval));
 	  return dd;
 }

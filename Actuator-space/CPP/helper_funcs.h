@@ -17,7 +17,6 @@ VectorXd TrackRoot(VectorXd thetai, VectorXd phii){
 		if (loopcounter>=25)
 			break;
 		loopcounter++;
-		// qval << tempphi, thetai;
 		Jmat = Jetaphmat(qval);
 		dphi = LinearSolve(Jmat, nvec);
 		tempphi = tempphi - dphi;
