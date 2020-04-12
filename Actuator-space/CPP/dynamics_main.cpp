@@ -61,14 +61,14 @@ int main ()
 
     gsl_odeiv2_driver * d = gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45, 1e-7, 1e-6, 0.0);
     int i;
-    double t = 0.0, t1 = 1;
+    double t = 0.0, t1 = 0.3;
     double y[12] = {1.2083279353106968,1.2083279353106968,1.2083279353106968,1.2083279353106968, 1.2083279353106968,1.2083279353106968, 0,0,0,0,0,0};
 //    double y[12] = {1.16276,1.16276,1.16276,1.16276,1.16276,1.16276,-0.90941, -0.909413,-0.909407, -0.909407, -0.909413, -0.90941};
 //    double y[12] = {1.2083,1.2083,1.2083,1.2083,1.2083,1.2083, 0, 0,0, 0, 0, 0};
 
-	for (i = 1; i <= 500; i++)
+	for (i = 1; i <= 100; i++)
     {
-        double ti = i * t1 / 500.0;
+        double ti = i * t1 / 100.0;
         int status = gsl_odeiv2_driver_apply (d, &t, ti, y);
 
         if (status != GSL_SUCCESS)
@@ -77,9 +77,11 @@ int main ()
             break;
         }
         //Printing the values
+/*
       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[0],y[1],y[2],y[3],y[4],y[5]);
       printf ("%.5e %.5e %.5e %.5e %.5e %.5e %.5e\n ", t, y[6], y[7], y[8], y[9], y[10], y[11]);
 
+*/
 /*    file <<t<<" "<<y[0]<<" "<<y[1]<<" "<<y[2]<<" "<<y[3]<<" "<<y[4]<<" "<<y[5]<<std::endl;
        dfile <<t<<" "<<y[6]<<" "<<y[7]<<" "<<y[8]<<" "<<y[9]<<" "<<y[10]<<" "<<y[11]<<std::endl;
        qss << y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7], y[8], y[9], y[10], \
@@ -117,7 +119,6 @@ VectorXd doubledots(VectorXd qthss){
 	dJqthval << dJphthval, MatrixXd::Zero(6,6);
 	//Now getting the velocity of the passive variables
 	dqvals = Jqthval*dthetai;
-
 	//Constructing the matrices
 	Mval = Mmat(qvals);
 	Cval = Cmat(qvals, dqvals);
