@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import genfromtxt
-import time
 
 config = genfromtxt('config_exectime.csv', delimiter=',')
 act = genfromtxt('act_exectime.csv', delimiter=',')

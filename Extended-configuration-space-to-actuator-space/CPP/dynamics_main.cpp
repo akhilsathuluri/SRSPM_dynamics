@@ -8,7 +8,6 @@
 #include "helper_funcs.h"
 #include <fstream>
 
-
 using namespace Eigen;
 
 VectorXd doubledots(VectorXd qthss);
@@ -132,7 +131,8 @@ VectorXd doubledots(VectorXd qthss){
 	  Cthval = (Jqethval.transpose())*(Mval*dJqethval+Cval*Jqethval		 );
 	  Gthval = (Jqethval.transpose())*Gval;
 	  //Dynamics equations
-	  dd = -(Mthval.inverse())*(Cthval*dthvals+Gthval);
+//	  dd = -(Mthval.inverse())*(Cthval*dthvals+Gthval);
+	  dd = -LinearSolve2(Mthval, (Cthval*dthvals+Gthval));
 	  
 	  //dd = -LinearSolve2(Mthval, (Cthval*dthvals+Gthval));
 	  return dd;
